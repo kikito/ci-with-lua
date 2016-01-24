@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Continuous Integration with Lua</title>
+
+    <meta name="description" content="FOSDEM presentation about Continuous Integration with Lua">
+    <meta name="author" content="Enrique García Cota">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/kikito.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/vs.css">
+
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+
+        <section data-markdown data-separator="\*\*\*">
+          <script type="text/template">
+
+<!-- .slide: data-background="./img/bridge.jpeg" -->
+# Continuous Integration
+#### with
+# Lua
+
+<div class="subtitle"><p>[Enrique García](http://kiki.to) ([@otikik](http://twitter.com/otikik)). FOSDEM - Jan '16</p></div>
+
+***
+
+https://kikito.github.io/ci-with-lua
+
+***
+
+<!-- .slide: data-background="#008AB8" -->
+
+## 1. What, why?
+## 2. How?
+## 3. Conclusion
+
+***
+<!-- .slide: data-background="./img/medusa.jpeg" -->
+
+# 1. What? Why?
+
+***
+<!-- .slide: data-background="#9BC53D" -->
+
+## Continuous Integration:
+
+> Automated & frequent checks on the code
+
+***
+<!-- .slide: data-background="./img/drone.jpg" -->
+
+# Automated
+
+***
+<!-- .slide: data-background="./img/frequent.jpg" -->
+
+# Frequent
+
+***
+<!-- .slide: data-background="./img/checks.jpg" -->
+
+# Checks
+
+***
+
+``` lua
+describe('A number', function()
+  it('Can be added to other number', function()
+    assert.equal(4, 2+2)
+  end)
+end)
+```
+
+***
+<!-- .slide: data-background="#9BC53D" -->
+
+# Why?
+
+***
+
+<!-- .slide: data-background="./img/time.jpeg" -->
+
+***
+
+<!-- .slide: data-background="./img/effort.jpeg" -->
+
+***
+
+Pending: Test effort graph
+
+***
+
+<!-- .slide: data-background="./img/mine.jpg" -->
+
+***
+
+<!-- .slide: data-background="./img/amish.jpg" -->
+
+# 2. How?
+
+***
+
+<!-- .slide: data-background="./img/time.jpeg" -->
+
+***
+
+|   |   |   |
+|---|---|---|
+| [![github](./img/github.png) github.com](http://github.com) | [![travis ci](./img/travis-ci.png) travis-ci.org](http://travis-ci.org) | [![coveralls.io](./img/coveralls.png) coveralls.io](http://coveralls.io) |
+***
+
+|   |   |   |
+|---|---|---|
+| [![bitbucket](./img/bitbucket.jpg) bitbucket.org](http://bitbucket.org) | [![Appveyor](./img/appveyor.png) appveyor.com](http://appveyor.com) | [![codecov.io](./img/codecov.png) codecov.io](http://codecov.io) |
+
+***
+
+<figure class="stretch">
+  <img src="./img/superman.jpg" class="stretch">
+</figure>
+
+***
+
+<!-- .slide: data-background="./img/supermans.jpg" -->
+
+***
+
+<!-- .slide: data-background="#008AB8" -->
+
+## a) Environment
+
+***
+
+![lua](./img/lua.png)
+![luajit](./img/luajit.png)
+
+5.1, 5.2, 5.3  /  2.0, 2.1
+
+***
+
+[travis-ci.org](http://travis-ci.org)
+
+[![travis-ci](./img/travis-ci.png)](http://travis-ci.org)
+
+***
+
+`.travis.yml`
+
+***
+
+<figure class="stretch">
+  <img src="./img/travis-languages.png" class="stretch">
+</figure>
+
+***
+
+``` yaml
+language: ruby
+
+rvm:
+  - '1.9.3'
+  - 'jruby-18mode' # JRuby in 1.8 mode
+  - 'jruby-19mode' # JRuby in 1.9 mode
+  - 'rbx-2.1.1'
+  - '1.8.7'
+  - 'ree'
+```
+
+***
+
+``` yaml
+language: C # does not really matter
+
+env:
+  global:
+    - LUAROCKS=2.2.2
+  matrix:
+    - LUA=lua5.1
+    - LUA=lua5.2
+    - LUA=lua5.3
+    - LUA=luajit2.0
+    - LUA=luajit2.1
+
+before_install:
+  - source install_lua.sh
+
+```
+
+***
+
+``` yaml
+language: C # does not really matter
+
+env:
+  global:
+    - LUAROCKS=2.2.2
+  matrix:
+    - LUA=lua5.1
+    - LUA=lua5.2
+    - LUA=lua5.3
+    - LUA=luajit2.0
+    - LUA=luajit2.1
+
+before_install:
+ ☞ - source install_lua.sh ☜
+
+```
+
+***
+
+``` sh
+if [ "$PLATFORM" == "macosx" ]; then
+  if [ "$LUA" == "luajit" ]; then
+    LUAJIT="yes";
+  fi
+  if [ "$LUA" == "luajit2.0" ]; then
+    LUAJIT="yes";
+  fi
+  if [ "$LUA" == "luajit2.1" ]; then
+    LUAJIT="yes";
+  fi;
+elif [ "$(expr substr $LUA 1 6)" == "luajit" ]; then
+  LUAJIT="yes";
+fi
+
+mkdir -p "$LUA_HOME_DIR"
+
+...
+
+```
+
+***
+
+``` yaml
+language: ruby
+
+rvm:
+  - '1.9.3'
+  - 'jruby-18mode' # JRuby in 1.8 mode
+  - 'jruby-19mode' # JRuby in 1.9 mode
+  - 'rbx-2.1.1'
+  - '1.8.7'
+  - 'ree'
+```
+
+***
+
+<figure class="stretch">
+  <img src="./img/no.png" class="stretch">
+</figure>
+
+***
+
+<figure class="stretch">
+  <img src="./img/python.png" class="stretch">
+</figure>
+
+***
+
+https://github.com/mpeterv/hererocks
+
+<figure class="stretch">
+  <a href="https://github.com/mpeterv/hererocks"><img src="./img/hererocks.png" class="stretch"></a>
+</figure>
+
+***
+
+``` yaml
+language: python
+sudo: false
+
+env:
+  - LUA="lua=5.1"
+  - LUA="lua=5.2"
+  - LUA="lua=5.3"
+  - LUA="luajit=2.0"
+  - LUA="luajit=2.1"
+
+before_install:
+  - pip install hererocks
+  - hererocks lua_install -r^ --$LUA
+  - export PATH=$PATH:$PWD/lua_install/bin
+
+```
+***
+
+<!-- .slide: data-background="#008AB8" -->
+
+## b) Specs
+
+***
+
+[olivinelabs.com/busted](http://olivinelabs.com/busted)
+
+<figure class="stretch">
+  <a href="https://http://olivinelabs.com/busted"><img src="./img/busted.png" class="stretch"></a>
+</figure>
+
+***
+
+``` lua
+-- spec/mylib_spec.lua
+
+local mylib = require 'mylib'
+
+describe('mylib', function()
+  it('is a table', function()
+    assert.equal('table', type(mylib))
+  end)
+end)
+
+```
+
+***
+
+<figure class="stretch">
+  <img src="./img/busted-ok.png" class="stretch">
+</figure>
+
+***
+
+<figure class="stretch">
+  <img src="./img/busted-error.png" class="stretch">
+</figure>
+
+***
+``` yml
+# .travis.yml
+
+install:
+  - luarocks install busted
+
+script:
+  - busted --verbose
+```
+***
+
+travis status screen
+<figure class="stretch">
+  <img src="./img/travis-green.png" class="stretch">
+</figure>
+
+***
+
+github pr screen
+<figure class="stretch">
+  <img src="./img/travis-github-yellow.png" class="stretch">
+</figure>
+
+***
+
+github pr screen
+<figure class="stretch">
+  <img src="./img/travis-github-red.png" class="stretch">
+</figure>
+
+***
+
+github pr screen
+<figure class="stretch">
+  <img src="./img/travis-github-green.png" class="stretch">
+</figure>
+
+***
+
+github all prs
+<figure class="stretch">
+  <img src="./img/travis-github-prs-green.png" class="stretch">
+</figure>
+
+***
+
+<!-- .slide: data-background="./img/mine.jpg" -->
+
+***
+
+<!-- .slide: data-background="#008AB8" -->
+
+## b) Coverage
+
+***
+
+[coveralls.io](http://coveralls.io)
+
+[![coveralls.io](./img/coveralls.png)](http://coveralls.io)
+
+***
+
+coveralls builds
+<figure class="stretch">
+  <img src="./img/coveralls-builds.png" class="stretch">
+</figure>
+
+***
+
+coveralls jobs
+<figure class="stretch">
+  <img src="./img/coveralls-jobs.png" class="stretch">
+</figure>
+
+***
+
+coveralls files
+<figure class="stretch">
+  <img src="./img/coveralls-files.png" class="stretch">
+</figure>
+
+***
+
+coveralls file
+<figure class="stretch">
+  <img src="./img/coveralls-file.png" class="stretch">
+</figure>
+
+***
+
+[keplerproject.github.io/luacov/](https://keplerproject.github.io/luacov/)
+
+<figure class="stretch">
+  <a href="https://kernelproject.github.io/luacov/"><img src="./img/luacov.png" class="stretch"></a>
+</figure>
+
+***
+
+[github.com/moteus/luacov-coveralls](https://github.com/moteus/luacov-coveralls)
+
+<figure class="stretch">
+  <a href="https://github.com/moteus/luacov-coveralls"><img src="./img/luacov-coveralls.png" class="stretch"></a>
+</figure>
+
+***
+
+``` yaml
+# .travis.yml
+
+install:
+  - luarocks install luacov
+  - luarocks install luacov-coveralls
+
+...
+
+after_success:
+  - luacov-coveralls
+```
+
+***
+
+``` yaml
+# .travis.yml
+
+install:
+  - luarocks install busted
+  - luarocks install luacov
+  - luarocks install luacov-coveralls
+
+script:
+  - busted -v
+
+after_success:
+  - luacov-coveralls -e
+```
+
+***
+
+``` yaml
+# .travis.yml
+
+install:
+  - luarocks install busted
+  - luarocks install luacov
+  - luarocks install luacov-coveralls
+
+script:
+  - busted -v -c
+
+after_success:
+  - luacov-coveralls -e $TRAVIS_BUILD_DIR/lua_install
+```
+
+
+***
+
+<!-- .slide: data-background="#008AB8" -->
+
+## c) Luacheck
+
+***
+
+Pending: image of luacheck page & url
+
+***
+
+Pending: luacheck report
+
+***
+
+Pending: Image of globals
+
+***
+
+``` yaml
+install:
+  - luarocks install luacheck
+
+script:
+  - luacheck --std max+busted *.lua spec
+```
+
+***
+
+# Conclusion
+
+***
+
+``` yaml
+language: python
+sudo: false
+
+env:
+  - LUA="lua=5.1"
+  - LUA="lua=5.2"
+  - LUA="lua=5.3"
+  - LUA="luajit=2.0"
+  - LUA="luajit=2.1"
+
+before_install:
+  - pip install hererocks
+  - hererocks lua_install -r^ --$LUA
+  - export PATH=$PATH:$PWD/lua_install/bin
+```
+
+***
+
+``` yaml
+install:
+  - luarocks install luacheck
+  - luarocks install busted
+  - luarocks install luacov
+  - luarocks install luacov-coveralls
+
+script:
+  - luacheck --std max+busted *.lua spec
+  - busted --verbose --coverage
+
+after_success:
+  - luacov-coveralls -e $TRAVIS_BUILD_DIR/lua_install
+```
+
+***
+
+# Questions?
+
+***
+
+<!-- .slide: data-background="./img/thank-you.jpg" -->
+
+# Thank you!
+
+          </script>
+        </section>
+      </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+
+        width: 960,
+        height: 700,
+
+        margin: 0.1,
+
+        // Bounds for smallest/largest possible scale to apply to content
+        minScale: 0.2,
+        maxScale: 1,
+
+        center: true,
+
+        theme: 'kikito',
+        transition: 'fade', // default/cube/page/concave/zoom/linear/fade/none
+        transitionSpeed: 'fast',
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return true; }, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/zoom-js/zoom.js', async: true },
+          { src: 'plugin/notes/notes.js', async: true }
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
