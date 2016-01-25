@@ -60,14 +60,14 @@ https://kikito.github.io/ci-with-lua
 
 <!-- .slide: data-background="#008AB8" -->
 
-## 1. What, why?
-## 2. How?
-## 3. Conclusion
+## I. What, why?
+## II. How?
+## III. Conclusion
 
 ***
 <!-- .slide: data-background="./img/medusa.jpeg" -->
 
-# 1. What? Why?
+# I. What? Why?
 
 ***
 <!-- .slide: data-background="#9BC53D" -->
@@ -126,7 +126,7 @@ Pending: Test effort graph
 
 <!-- .slide: data-background="./img/amish.jpg" -->
 
-# 2. How?
+# II. How?
 
 ***
 
@@ -516,19 +516,38 @@ after_success:
 
 ***
 
-Pending: image of luacheck page & url
+[github.com/mpeterv/luacheck](https://github.com/mpeterv/luacheck)
+
+<figure class="stretch">
+  <a href="https://github.com/mpeterv/luacheck"><img src="./img/luacheck.png" class="stretch"></a>
+</figure>
 
 ***
 
-Pending: luacheck report
+<figure class="stretch">
+  <img src="./img/luacheck-report.png" class="stretch">
+</figure>
 
 ***
 
-Pending: Image of globals
+* Global variables
+  * Read-only globals
+  * Implicitly defined globals
+  * Modules
+
+* Unused variables and values
+
+  * Unused values and uninitialized variables
+  * Secondary values and variables
+
+* Shadowing declarations
+* Control flow and data flow issues
 
 ***
 
 ``` yaml
+# .travis.yml
+
 install:
   - luarocks install luacheck
 
@@ -538,11 +557,15 @@ script:
 
 ***
 
-# Conclusion
+<!-- .slide: data-background="#008AB8" -->
+
+## d) All together
 
 ***
 
 ``` yaml
+# .travis.yml
+
 language: python
 sudo: false
 
@@ -562,6 +585,8 @@ before_install:
 ***
 
 ``` yaml
+# .travis.yml (cont.)
+
 install:
   - luarocks install luacheck
   - luarocks install busted
@@ -578,7 +603,128 @@ after_success:
 
 ***
 
+<!-- .slide: data-background="#008AB8" -->
+
+## e) Alternatives
+
+***
+
+<!-- .slide: data-background="./img/supermans.jpg" -->
+
+***
+
+C extensions
+
+***
+
+```
+luarocks make
+```
+
+***
+
+``` lua
+-- mylib-scm-1.rockspec
+
+package = "mylib"
+version = "scm-1"
+
+source = {...}
+description = {...}
+dependencies = {...}
+
+build {
+  type = "command"
+  build_command = [[
+    cmake -E make_directory build;
+    cd build;
+    cmake .. -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_PREFIX_PATH="$(LUA_BINDIR)/.." \
+      -DCMAKE_INSTALL_PREFIX="$(PREFIX)";
+    $(MAKE)
+  ]],
+  install_command = "cd build && $(MAKE) install"
+}
+
+```
+
+***
+
+``` yaml
+# travis.yml
+
+language: c
+
+compiler:
+  - gcc
+  - clang
+
+addons:
+  apt:
+    packages:
+    - cmake
+    - gcc-multilib
+    - build-essential
+    - gcc
+    - g++
+    ...
+```
+
+***
+
+https://github.com/torch/nngraph/blob/master/.travis.yml
+
+***
+
+<figure class="stretch">
+  <img src="./img/windows.jpg" class="stretch">
+</figure>
+
+***
+
+[appveyor.com](http://appveyor.com)
+
+[![Appveyor](./img/appveyor.png)](http://appveyor.com)
+
+***
+
+## Always be testing
+### Ignacio Burgueño
+
+https://www.youtube.com/watch?v=sLFwKeyH2Ug
+
+https://github.com/ignacio/lua-appveyor-example/
+
+
+***
+
+<!-- .slide: data-background="./img/moon.jpeg" -->
+
+# III. Conclusion
+
+***
+
+### What, why, how?
+
+***
+
+### What, why, how, <del>should</del>?
+
+***
+
+<!-- .slide: data-background="#000000" -->
+
+ <figure class="stretch">
+   <img src="./img/yoda.gif" width=1200 class="stretch">
+ </figure>
+
+***
+
 # Questions?
+
+https://kikito.github.io/ci-with-lua
+
+Enrique García Cota ([@otikik](https://twitter.com/otikik))
 
 ***
 
