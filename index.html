@@ -46,8 +46,8 @@
           <script type="text/template">
 
 <!-- .slide: data-background="./img/bridge.jpeg" -->
-# Continuous Integration
-#### with
+## Continuous Integration
+### with
 # Lua
 
 <div class="subtitle"><p>[Enrique García](http://kiki.to) ([@otikik](http://twitter.com/otikik)). FOSDEM - Jan '16</p></div>
@@ -94,6 +94,8 @@ https://kikito.github.io/ci-with-lua
 ***
 
 ``` lua
+-- spec/numbers_spec.lua
+
 describe('A number', function()
   it('Can be added to other number', function()
     assert.equal(4, 2+2)
@@ -185,6 +187,8 @@ end)
 ***
 
 ``` yaml
+# .travis.yml
+
 language: ruby
 
 rvm:
@@ -199,17 +203,16 @@ rvm:
 ***
 
 ``` yaml
+# .travis.yml
+
 language: C # does not really matter
 
 env:
-  global:
-    - LUAROCKS=2.2.2
-  matrix:
-    - LUA=lua5.1
-    - LUA=lua5.2
-    - LUA=lua5.3
-    - LUA=luajit2.0
-    - LUA=luajit2.1
+  - LUA=lua5.1
+  - LUA=lua5.2
+  - LUA=lua5.3
+  - LUA=luajit2.0
+  - LUA=luajit2.1
 
 before_install:
   - source install_lua.sh
@@ -219,17 +222,16 @@ before_install:
 ***
 
 ``` yaml
+# .travis.yml
+
 language: C # does not really matter
 
 env:
-  global:
-    - LUAROCKS=2.2.2
-  matrix:
-    - LUA=lua5.1
-    - LUA=lua5.2
-    - LUA=lua5.3
-    - LUA=luajit2.0
-    - LUA=luajit2.1
+  - LUA=lua5.1
+  - LUA=lua5.2
+  - LUA=lua5.3
+  - LUA=luajit2.0
+  - LUA=luajit2.1
 
 before_install:
  ☞ - source install_lua.sh ☜
@@ -239,6 +241,8 @@ before_install:
 ***
 
 ``` sh
+# install_lua.sh
+
 if [ "$PLATFORM" == "macosx" ]; then
   if [ "$LUA" == "luajit" ]; then
     LUAJIT="yes";
@@ -262,6 +266,8 @@ mkdir -p "$LUA_HOME_DIR"
 ***
 
 ``` yaml
+# .travis.yml
+
 language: ruby
 
 rvm:
@@ -296,6 +302,8 @@ https://github.com/mpeterv/hererocks
 ***
 
 ``` yaml
+# .travis.yml
+
 language: python
 sudo: false
 
@@ -512,7 +520,7 @@ after_success:
 
 <!-- .slide: data-background="#008AB8" -->
 
-## c) Luacheck
+## c) Static analysis
 
 ***
 
@@ -613,7 +621,9 @@ after_success:
 
 ***
 
-C extensions
+<!-- .slide: data-background="./img/c-extension.jpg" -->
+
+### C Extensions
 
 ***
 
@@ -668,6 +678,9 @@ addons:
     - gcc
     - g++
     ...
+
+script:
+  - luarocks make
 ```
 
 ***

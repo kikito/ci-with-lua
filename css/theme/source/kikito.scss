@@ -13,9 +13,61 @@
 
 
 // Include theme-specific fonts
-@import url(https://fonts.googleapis.com/css?family=Montserrat:700);
-@import url(https://fonts.googleapis.com/css?family=Arimo:400,700);
-@import url(https://fonts.googleapis.com/css?family=Lora:400italic);
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 700;
+  font-style: normal;
+  src: url('../../lib/font/Montserrat-700/Montserrat-700.eot');
+  src: url('../../lib/font/Montserrat-700/Montserrat-700.eot?#iefix') format('embedded-opentype'),
+       local('Montserrat-Bold'),
+       local('Montserrat-700'),
+       url('../../lib/font/Montserrat-700/Montserrat-700.woff2') format('woff2'),
+       url('../../lib/font/Montserrat-700/Montserrat-700.woff') format('woff'),
+       url('../../lib/font/Montserrat-700/Montserrat-700.ttf') format('truetype'),
+       url('../../lib/font/Montserrat-700/Montserrat-700.svg#Montserrat') format('svg');
+}
+
+@font-face {
+  font-family: 'Arimo';
+  font-weight: 400;
+  font-style: normal;
+  src: url('../../lib/font/Arimo-regular/Arimo-regular.eot');
+  src: url('../../lib/font/Arimo-regular/Arimo-regular.eot?#iefix') format('embedded-opentype'),
+       local('Arimo'),
+       local('Arimo-regular'),
+       url('../../lib/font/Arimo-regular/Arimo-regular.woff2') format('woff2'),
+       url('../../lib/font/Arimo-regular/Arimo-regular.woff') format('woff'),
+       url('../../lib/font/Arimo-regular/Arimo-regular.ttf') format('truetype'),
+       url('../../lib/font/Arimo-regular/Arimo-regular.svg#Arimo') format('svg');
+}
+
+@font-face {
+  font-family: 'Arimo';
+  font-weight: 700;
+  font-style: normal;
+  src: url('../../lib/font/Arimo-700/Arimo-700.eot');
+  src: url('../../lib/font/Arimo-700/Arimo-700.eot?#iefix') format('embedded-opentype'),
+       local('Arimo Bold'),
+       local('Arimo-700'),
+       url('../../lib/font/Arimo-700/Arimo-700.woff2') format('woff2'),
+       url('../../lib/font/Arimo-700/Arimo-700.woff') format('woff'),
+       url('../../lib/font/Arimo-700/Arimo-700.ttf') format('truetype'),
+       url('../../lib/font/Arimo-700/Arimo-700.svg#Arimo') format('svg');
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-weight: 400;
+  font-style: italic;
+  src: url('../../lib/font/Lora-italic/Lora-italic.eot');
+  src: url('../../lib/font/Lora-italic/Lora-italic.eot?#iefix') format('embedded-opentype'),
+       local('Lora Italic'),
+       local('Lora-italic'),
+       url('../../lib/font/Lora-italic/Lora-italic.woff2') format('woff2'),
+       url('../../lib/font/Lora-italic/Lora-italic.woff') format('woff'),
+       url('../../lib/font/Lora-italic/Lora-italic.ttf') format('truetype'),
+       url('../../lib/font/Lora-italic/Lora-italic.svg#Lora') format('svg');
+}
 
 
 // Override theme settings (see ../template/settings.scss)
@@ -119,7 +171,7 @@ $altLinkColor: lighten($linkColor, 30%);
 
     blockquote {
       border: none;
-      width: 85%;
+      width: 80%;
       font-family: $secondaryFont;
       padding: 0.5em 0.5em 0.5em 3em;
       text-align: left;
