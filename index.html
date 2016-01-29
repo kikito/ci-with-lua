@@ -452,6 +452,13 @@ coveralls file
 
 ***
 
+coveralls github integration
+<figure class="stretch">
+  <img src="./img/coveralls-github.png" class="stretch">
+</figure>
+
+***
+
 [keplerproject.github.io/luacov/](https://keplerproject.github.io/luacov/)
 
 <figure class="stretch">
@@ -492,7 +499,7 @@ install:
   - luarocks install luacov-coveralls
 
 script:
-  - busted -v
+  - busted --verbose
 
 after_success:
   - luacov-coveralls
@@ -509,7 +516,7 @@ install:
   - luarocks install luacov-coveralls
 
 script:
-  - busted -v -c
+  - busted --verbose --coverage
 
 after_success:
   - luacov-coveralls -e $TRAVIS_BUILD_DIR/lua_install
