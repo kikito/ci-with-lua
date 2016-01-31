@@ -337,13 +337,24 @@ before_install:
 ***
 
 ``` lua
+-- mylib.lua
+
+return {
+  add = function(a,b) return a+b end
+}
+
+```
+
+***
+
+``` lua
 -- spec/mylib_spec.lua
 
 local mylib = require 'mylib'
 
 describe('mylib', function()
-  it('is a table', function()
-    assert.equal('table', type(mylib))
+  it('adds numbers', function()
+    assert.equal(5, mylib.add(2,3))
   end)
 end)
 
